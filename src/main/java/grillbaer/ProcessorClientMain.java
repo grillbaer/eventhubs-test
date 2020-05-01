@@ -16,13 +16,13 @@ import java.util.function.Consumer;
 
 /**
  * Test app consuming events from a EventHub using Azure SDK's {@linkplain EventProcessorClient} for
- * auto-balancing, failover and more. Simply outputs alls received event texts to log.
+ * auto-balancing, failover and more. Simply outputs all received event texts to log.
  */
 public final class ProcessorClientMain {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessorClientMain.class);
 
     public static void main(String[] args) throws IOException {
-        final Credentials creds = Credentials.readDefault();
+        final Credentials creds = Credentials.readFromDefault();
 
         final Consumer<EventContext> processEvent = eventContext -> {
             LOG.info("Received event '" + eventContext.getEventData().getBodyAsString()
@@ -30,9 +30,7 @@ public final class ProcessorClientMain {
             eventContext.updateCheckpoint();
         };
 
-        final Consumer<ErrorContext> processError = errorContext -> {
-            LOG.info("Received error", errorContext.getThrowable());
-        };
+        final Consumer<ErrorContext> processError = errorContext -> LOG.info("Received error", errorContext.getThrowable());
 
         final BlobContainerAsyncClient blobContainerAsyncClient = new BlobContainerClientBuilder()
                 .connectionString(creds.getBlobConnectionString())

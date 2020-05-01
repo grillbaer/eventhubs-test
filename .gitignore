@@ -1,3 +1,4 @@
 *.class
 /target
 /secret-credentials.properties
+/.idea/libraries/

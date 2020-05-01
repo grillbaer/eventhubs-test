@@ -18,7 +18,7 @@ public final class RoundRobinSenderMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-        final Credentials creds = Credentials.readDefault();
+        final Credentials creds = Credentials.readFromDefault();
         final EventHubProducerClient producer = new EventHubClientBuilder().
                 connectionString(creds.getEventHubConnectionString(), creds.getEventHubName()).
                 buildProducerClient();
@@ -33,10 +33,10 @@ public final class RoundRobinSenderMain {
         });
 
         for (int i = 1; i < 1000000; i++) {
-            final EventDataBatch batch = producer.createBatch();
             final String eventText = "Servus Bayern #" + i;
+            final EventDataBatch batch = producer.createBatch();
             batch.tryAdd(new EventData(eventText));
-            LOG.info("Sending event '{} ...", eventText);
+            LOG.info("Sending event '{}' ...", eventText);
             producer.send(batch);
 
             Thread.sleep(500);
